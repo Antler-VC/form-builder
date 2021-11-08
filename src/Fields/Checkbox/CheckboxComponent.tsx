@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IFieldComponentProps } from '../../types';
 
 import {
@@ -58,6 +58,10 @@ export default function CheckboxComponent({
 }: ICheckboxComponentProps) {
   const classes = useStyles();
 
+  useEffect(() => {
+    onBlur && onBlur()    
+  }, [value])
+
   return (
     <FormControlLabel
       control={
@@ -66,7 +70,6 @@ export default function CheckboxComponent({
           checked={value}
           onChange={e => {
             onChange(e.target.checked);
-            onBlur();
           }}
           inputProps={
             {
@@ -78,7 +81,6 @@ export default function CheckboxComponent({
           inputRef={ref as React.MutableRefObject<any>}
         />
       }
-      onBlur={onBlur}
       label={
         <>
           {label}
