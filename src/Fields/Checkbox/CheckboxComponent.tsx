@@ -59,7 +59,10 @@ export default function CheckboxComponent({
   const classes = useStyles();
 
   useEffect(() => {
-    onBlur && onBlur();
+    if (fieldState.isTouched && onBlur) {
+      console.log(`VALUE CHANGE: TRIGGER ONBLUR!`);
+      onBlur();
+    }
   }, [value]);
 
   return (
