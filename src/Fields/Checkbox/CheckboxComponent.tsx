@@ -59,8 +59,8 @@ export default function CheckboxComponent({
   const classes = useStyles();
 
   useEffect(() => {
-    onBlur && onBlur()    
-  }, [value])
+    onBlur && onBlur();
+  }, [value]);
 
   return (
     <FormControlLabel
