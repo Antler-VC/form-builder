@@ -14,8 +14,6 @@ import {
   Typography,
   IconButton,
   DialogContent,
-  DialogContentText,
-  DialogActions,
   Grid,
   Button,
   ButtonProps,
@@ -96,7 +94,7 @@ export interface IFormDialogProps {
   UseFormProps?: UseFormProps;
 
   open: boolean;
-  onClose: () => void;
+  onClose: (reason: 'submit' | 'cancel') => void;
   title: React.ReactNode;
   formHeader?: React.ReactNode;
   formFooter?: React.ReactNode;
@@ -104,6 +102,7 @@ export interface IFormDialogProps {
   customActions?: React.ReactNode;
   SubmitButtonProps?: Partial<ButtonProps>;
   CancelButtonProps?: Partial<ButtonProps>;
+  hideCancelButton?: boolean;
   DialogProps?: Partial<MuiDialogProps>;
   hideSubmitError?: boolean;
   SubmitErrorProps?: Partial<ISubmitErrorProps>;
@@ -131,6 +130,7 @@ export default function FormDialog({
   customActions,
   SubmitButtonProps,
   CancelButtonProps,
+  hideCancelButton = false,
   DialogProps,
   hideSubmitError = false,
   SubmitErrorProps = {},
@@ -168,14 +168,14 @@ export default function FormDialog({
     : false;
 
   const [closeConfirmation, setCloseConfirmation] = useState(false);
-  const handleClose = () => {
+  const handleClose = (reason: 'submit' | 'cancel') => {
     setCloseConfirmation(false);
-    onClose();
+    onClose(reason);
     reset();
   };
   const confirmClose = () => {
     if (isDirty) setCloseConfirmation(true);
-    else handleClose();
+    else handleClose('cancel');
   };
 
   return (
@@ -183,7 +183,7 @@ export default function FormDialog({
       <form
         onSubmit={handleSubmit(values => {
           onSubmit(values);
-          handleClose();
+          handleClose('submit');
         })}
       >
         <Dialog
@@ -249,14 +249,16 @@ export default function FormDialog({
           >
             {customActions ?? (
               <>
-                <Grid item>
-                  <Button
-                    color="primary"
-                    onClick={confirmClose}
-                    {...(CancelButtonProps ?? {})}
-                    children={CancelButtonProps?.children || 'Cancel'}
-                  />
-                </Grid>
+                {!hideCancelButton && (
+                  <Grid item>
+                    <Button
+                      color="primary"
+                      onClick={confirmClose}
+                      {...(CancelButtonProps ?? {})}
+                      children={CancelButtonProps?.children || 'Cancel'}
+                    />
+                  </Grid>
+                )}
                 <Grid item>
                   <Button
                     color="primary"
@@ -273,7 +275,7 @@ export default function FormDialog({
             {!hideSubmitError && hasErrors && (
               <SubmitError
                 {...SubmitErrorProps}
-                style={{ marginTop: 0, ...SubmitErrorProps.style }}
+                style={{ marginTop: 0, ...SubmitErrorProps?.style }}
               />
             )}
           </Grid>
@@ -286,33 +288,63 @@ export default function FormDialog({
           TransitionComponent={SlideTransitionMui}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
+          classes={{
+            root: classes.root,
+            paper: classes.paper,
+          }}
         >
-          <DialogTitle id="alert-dialog-title">
-            {CloseConfirmProps.title || 'Close form?'}
+          <DialogTitle
+            id="alert-dialog-title"
+            className={classes.titleRow}
+            disableTypography
+          >
+            <Typography
+              className={classes.title}
+              component="h2"
+              color="textPrimary"
+            >
+              {CloseConfirmProps.title || 'Close form?'}
+            </Typography>
           </DialogTitle>
 
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {CloseConfirmProps.body ||
-                'You entered data in this form that will be lost.'}
-            </DialogContentText>
+          <DialogContent
+            id="alert-dialog-description"
+            className={classes.content}
+          >
+            {CloseConfirmProps.body ||
+              'You will lose all the data you entered in this form.'}
           </DialogContent>
 
-          <DialogActions>
-            <Button
-              onClick={() => setCloseConfirmation(false)}
-              color="primary"
-              children="Cancel"
-              {...(CloseConfirmProps.cancelButtonProps || {})}
-            />
-            <Button
-              onClick={handleClose}
-              color="primary"
-              autoFocus
-              children="Close"
-              {...(CloseConfirmProps.confirmButtonProps || {})}
-            />
-          </DialogActions>
+          <Grid
+            container
+            spacing={2}
+            justify="center"
+            alignItems="center"
+            className={classes.actions}
+          >
+            <Grid item>
+              <Button
+                onClick={() => setCloseConfirmation(false)}
+                color="primary"
+                {...(CloseConfirmProps.cancelButtonProps ?? {})}
+                children={
+                  CloseConfirmProps.cancelButtonProps?.children || 'Cancel'
+                }
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={() => handleClose('cancel')}
+                color="primary"
+                variant="contained"
+                autoFocus
+                {...(CloseConfirmProps.confirmButtonProps ?? {})}
+                children={
+                  CloseConfirmProps.confirmButtonProps?.children || 'Close'
+                }
+              />
+            </Grid>
+          </Grid>
         </Dialog>
       </form>
     </Portal>
