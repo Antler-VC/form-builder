@@ -13,11 +13,13 @@ import MultiSelect from './MultiSelect';
 import Slider from './Slider';
 import List from './List';
 import Color from './Color';
+import Score from './Score';
 import Hidden from './Hidden';
 
 import ContentHeader from './ContentHeader';
 import ContentSubHeader from './ContentSubHeader';
 import ContentParagraph from './ContentParagraph';
+import ContentImage from './ContentImage';
 
 export const FieldConfigs = [
   ShortText,
@@ -31,11 +33,13 @@ export const FieldConfigs = [
   Slider,
   List,
   Color,
+  Score,
   Hidden,
 
   ContentHeader,
   ContentSubHeader,
   ContentParagraph,
+  ContentImage,
 ];
 
 /** Returns specific property of field config */
