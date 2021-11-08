@@ -1,6 +1,6 @@
 {
   "version": "2.4.11",
-  "name": "@antlerengineering/form-builder",
+  "name": "@antlervc/form-builder",
   "publishConfig": {
     "access": "public"
   },
