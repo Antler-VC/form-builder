@@ -31,9 +31,7 @@
     "react": "^16.14.0"
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
+    "hooks": {}
   },
   "prettier": {
     "printWidth": 80,
