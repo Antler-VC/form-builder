@@ -13,6 +13,9 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "author": "",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "index.js"
   ]
