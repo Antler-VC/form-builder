@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { Grid } from '@material-ui/core';
+import FieldSkeleton from './FieldSkeleton';
 
 import { getFieldProp } from './fields';
 
@@ -79,6 +80,7 @@ export default function FieldWrapper({
         xs={gridCols}
         style={disablePadding ? { padding: 0 } : {}}
       >
+        <Suspense fallback={<FieldSkeleton />}>
           {React.createElement(fieldComponent, {
             ...props,
             // Stub Controller render props
@@ -87,6 +89,7 @@ export default function FieldWrapper({
             name: name!, // Fix TypeScript error
             label: label!, // Fix TypeScript error
           })}
+        </Suspense>
       </Grid>
     );
 
@@ -101,6 +104,7 @@ export default function FieldWrapper({
         xs={gridCols}
         style={disablePadding ? { padding: 0 } : {}}
       >
+        <Suspense fallback={<FieldSkeleton />}>
           {React.createElement(fieldComponent, {
             ...props,
             // Stub Controller render props
@@ -109,6 +113,7 @@ export default function FieldWrapper({
             name: name!, // Fix TypeScript error
             label: label!, // Fix TypeScript error
           })}
+        </Suspense>
       </Grid>
     );
 
@@ -120,6 +125,7 @@ export default function FieldWrapper({
       xs={gridCols}
       style={disablePadding ? { padding: 0 } : {}}
     >
+      <Suspense fallback={<FieldSkeleton />}>
         <Controller
           control={control}
           name={name!}
@@ -134,6 +140,7 @@ export default function FieldWrapper({
           }
           defaultValue={defaultValue}
         />
+      </Suspense>
     </Grid>
   );
 }
